@@ -38,12 +38,15 @@ mysql = MySQL(app)
 @ensure_logged_in
 def home():
     username = session.get('username')
-    return render_template("home.html",username=username)
+    return render_template("homeclone.html",username=username)
 
 @app.route("/auth")
 def auth():
     return render_template("auth.html")
 
+# @app.route("/home-clone")
+# def homeClone():
+#     return render_template("homeclone.html")
 
 
 @app.route("/login-action", methods = ["POST"])
@@ -59,6 +62,7 @@ def loginAction():
 
     if user:
         session['username'] = user[1]
+        flash('Login successful!', 'success')
         return redirect(url_for('home'))
     else:
         flash('Invalid username or password', 'error')
@@ -66,6 +70,7 @@ def loginAction():
 
 
 @app.route("/logout")
+@ensure_logged_in
 def logout():
     session.pop('username', None)
     return redirect(url_for('auth'))
@@ -96,6 +101,7 @@ def registerAction():
 
 
 @app.route("/predict", methods = ["GET", "POST"])
+@ensure_logged_in
 @cross_origin()
 def predict():
     if request.method == "POST":
@@ -434,10 +440,10 @@ def predict():
 
         output=round(prediction[0],2)
 
-        return render_template('home.html',prediction_text="Your Flight price is Rs. {}".format(output))
+        return render_template('homeclone.html',prediction_text="Your Flight price is Rs ₹ {}".format(output))
 
 
-    return render_template("home.html")
+    return render_template("homeclone.html")
 
 
 

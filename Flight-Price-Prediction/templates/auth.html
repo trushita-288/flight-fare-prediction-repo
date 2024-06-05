@@ -1,7 +1,7 @@
 <style>
     :root {
-    --primary-color: #2b1eb3a3;
-    --secondary-color: #2b1eb3a3;
+    --primary-color: #4fa3e3;
+    --secondary-color: #4fa3e3;
     --black: #000000;
     --white: #ffffff;
     --gray: #efefef;
@@ -108,7 +108,7 @@ body {
     outline: none;
 }
 .form button:hover{
-    background-color: #2b1eb3d9;
+    background-color: #1286de;
 }
 .form p {
     margin: 1rem 0;
@@ -374,8 +374,57 @@ body {
             font-size:large !important;
             font-weight: bold;
         }
+
+
+
+.header {
+    position: absolute;
+    top: 10px; /* Adjust the top position as needed */
+    left: 20px; /* Adjust the left position as needed */
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Spread out the items */
+    z-index: 10; /* Ensure the header is on top of other elements */
+}
+
+.left-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.header .logo {
+    width: 40px; /* Adjust the size as needed */
+    height: 40px; /* Adjust the size as needed */
+}
+
+.app-name-container {
+    display: flex;
+    align-items: flex-start;
+    margin-left: 10px; /* Adjust the left margin as needed */
+}
+
+.header .app-name {
+    font-size: 24px;
+    font-weight: bold;
+    color: #00000080; /* Adjust the text color as needed */
+    text-decoration: none;
+    margin-top: 8px; /* Adjust the top margin as needed */
+}
 </style>
 
+<div class="header">
+    <a href="/" class="logo-container">
+        <img src="/static/img/plane.png" alt="SkySaver Logo" class="logo">
+    </a>
+    <div class="app-name-container">
+        <span class="app-name">SkySaver</span>
+    </div>
+</div>
 <div id="container" class="container">
     <!-- FORM SECTION -->
     <div class="row">
