@@ -1,0 +1,16 @@
+# Ignore compiled files
+*.pyc
+__pycache__/
+
+# Ignore virtual environments
+venv/
+env/
+.vscode/
+
+# Ignore other temporary files
+*.log
+*.tmp
+
+# Ignore system-specific files
+.DS_Store
+Thumbs.db
