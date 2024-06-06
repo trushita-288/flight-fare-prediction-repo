@@ -1,16 +1,4 @@
-# Ignore compiled files
-*.pyc
-__pycache__/
-
-# Ignore virtual environments
-venv/
-env/
-.vscode/
-
-# Ignore other temporary files
-*.log
-*.tmp
-
-# Ignore system-specific files
-.DS_Store
-Thumbs.db
+# Ignore compiled files in MySQLdb and flask_mysqldb
+vab/Lib/site-packages/MySQLdb/__pycache__/
+vab/Lib/site-packages/MySQLdb/constants/__pycache__/
+vab/Lib/site-packages/flask_mysqldb/__pycache__/
