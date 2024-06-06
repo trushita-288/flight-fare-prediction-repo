@@ -1,0 +1,5 @@
+# Ignore compiled files in MySQLdb and flask_mysqldb
+vab/Lib/site-packages/MySQLdb/__pycache__/
+vab/Lib/site-packages/MySQLdb/constants/__pycache__/
+vab/Lib/site-packages/flask_mysqldb/__pycache__/
+*.pyc

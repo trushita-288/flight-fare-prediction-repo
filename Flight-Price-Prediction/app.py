@@ -1,23 +1,107 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template,redirect, url_for,session,flash
 from flask_cors import cross_origin
 import sklearn
 import pickle
 import pandas as pd
+from flask_mysqldb import MySQL
+import hashlib
+import os
+from functools import wraps
+
 
 app = Flask(__name__)
-model = pickle.load(open("test.pkl", "rb"))
+app.secret_key = os.urandom(24)
 
+
+def ensure_logged_in(func):
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if 'username' not in session:
+            return redirect(url_for('auth'))
+        return func(*args, **kwargs)
+
+    return wrapper
+
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_DB'] = 'flight_fare_prediction'
+
+# app = Flask(__name__)
+model = pickle.load(open("test.pkl", "rb"))
+mysql = MySQL(app)
 
 
 @app.route("/")
 @cross_origin()
+@ensure_logged_in
 def home():
-    return render_template("home.html")
+    username = session.get('username')
+    return render_template("homeclone.html",username=username)
+
+@app.route("/auth")
+def auth():
+    return render_template("auth.html")
+
+# @app.route("/home-clone")
+# def homeClone():
+#     return render_template("homeclone.html")
+
+
+@app.route("/login-action", methods = ["POST"])
+def loginAction():
+    username = request.form['username1']
+    password = request.form['password2']
+    hashed_password = hashlib.sha256(password.encode()).hexdigest()
+
+    cur = mysql.connection.cursor()
+    cur.execute('SELECT * FROM users WHERE name = %s AND password = %s', (username, hashed_password))
+    user = cur.fetchone()
+    cur.close()
+
+    if user:
+        session['username'] = user[1]
+        flash('Login successful!', 'success')
+        return redirect(url_for('home'))
+    else:
+        flash('Invalid username or password', 'error')
+        return redirect(url_for('auth'))
+
+
+@app.route("/logout")
+@ensure_logged_in
+def logout():
+    session.pop('username', None)
+    return redirect(url_for('auth'))
+
+
+
+@app.route("/register-action", methods = ["POST"])
+def registerAction():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        email = request.form['email']
+        hashed_password = hashlib.sha256(password.encode()).hexdigest()
+
+        cur = mysql.connection.cursor()
+        cur.execute('INSERT INTO users (name,email,password) VALUES (%s, %s,%s)', (username,email,hashed_password))
+        mysql.connection.commit()
+        cur.close()
+        flash('Signup successful! Please sign in.', 'success')
+        return redirect(url_for('auth'))
+    
+
+
+
+
 
 
 
 
 @app.route("/predict", methods = ["GET", "POST"])
+@ensure_logged_in
 @cross_origin()
 def predict():
     if request.method == "POST":
@@ -356,10 +440,10 @@ def predict():
 
         output=round(prediction[0],2)
 
-        return render_template('home.html',prediction_text="Your Flight price is Rs. {}".format(output))
+        return render_template('homeclone.html',prediction_text="Your Flight price is Rs ₹ {}".format(output))
 
 
-    return render_template("home.html")
+    return render_template("homeclone.html")
 
 
 
